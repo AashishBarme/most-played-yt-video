@@ -1,9 +1,19 @@
 let res = document.getElementById('result');
+
 chrome.storage.sync.get(['youtubeId'], function(result) {
-          console.log('Value currently is ' + result.youtubeId);
+          console.log('Value currently is ' + result.youtubeId.length);
+          if (result.youtubeId.length > 2) {
           let data = JSON.parse(result.youtubeId);
           console.log(data);
           res.innerHTML = "<a href='https://www.youtube.com/watch?v="+mode(data)+"' target='_blank'>Here is the song</a>"
+          } else {
+              res.innerHTML = "No song selected yet";
+          }
+});
+
+chrome.storage.sync.getBytesInUse(['youtubeId'], function(value){
+    
+    console.log(value);
 });
 
 function mode(array)
