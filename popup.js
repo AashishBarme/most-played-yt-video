@@ -1,22 +1,36 @@
 let res = document.getElementById('result');
+let songList = [];
 
 chrome.storage.sync.get(['youtubeId'], function(result) {
           console.log('Value currently is ' + result.youtubeId.length);
           if (result.youtubeId.length > 2) {
-          let data = JSON.parse(result.youtubeId);
-          console.log(data);
-          res.innerHTML = "<a href='https://www.youtube.com/watch?v="+mode(data)+"' target='_blank'>Here is the song</a>"
+            let data = JSON.parse(result.youtubeId);
+            
+            //calling resursive function
+            var list = operation(data, 10);
+            console.log(list);
           } else {
               res.innerHTML = "No song selected yet";
           }
 });
 
 chrome.storage.sync.getBytesInUse(['youtubeId'], function(value){
-    
     console.log(value);
 });
 
-function mode(array)
+function operation(savedArray, counter)
+{
+     if(counter == 0)
+     {
+        return songList;
+     } else {
+        songList.push(mostOccuredItem(savedArray)); //adding id in array
+        var newArray =  removeItemFromArray(savedArray, mostOccuredItem(savedArray)); //removing previous id from array
+        return operation(newArray, counter-1);
+     }
+}
+
+function mostOccuredItem(array)
 {
     if(array.length == 0)
         return null;
@@ -36,4 +50,11 @@ function mode(array)
         }
     }
     return maxEl;
+}
+
+
+function removeItemFromArray(arr, value)
+{
+    return arr.filter(function(ele){
+         return ele != value; });
 }
