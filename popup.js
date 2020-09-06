@@ -1,5 +1,7 @@
 let res = document.getElementById('result');
 let songList = [];
+let ul = document.createElement('ol');
+ul.setAttribute('id','songList');
 
 chrome.storage.sync.get(['youtubeId'], function(result) {
           console.log('Value currently is ' + result.youtubeId.length);
@@ -9,6 +11,10 @@ chrome.storage.sync.get(['youtubeId'], function(result) {
             //calling resursive function
             var list = operation(data, 10);
             console.log(list);
+
+            res.appendChild(ul);
+            list.forEach(createHtmlList);
+            // res.innerHTML = ul; 
           } else {
               res.innerHTML = "No song selected yet";
           }
@@ -17,6 +23,16 @@ chrome.storage.sync.get(['youtubeId'], function(result) {
 chrome.storage.sync.getBytesInUse(['youtubeId'], function(value){
     console.log(value);
 });
+
+function createHtmlList(element,index,arr)
+{
+    var li = document.createElement('li');
+    li.setAttribute('class','item');
+    ul.appendChild(li);
+    li.innerHTML  = li.innerHTML + element;
+}
+
+
 
 function operation(savedArray, counter)
 {
